@@ -1,0 +1,112 @@
+openapi: "3.0.2"
+info:
+    title: Test Project API
+    version: 1.0
+servers:
+  - url: http://localhost:5000/
+components:
+    schemas:
+        error:
+            type: object
+            properties:
+                error:
+                    description: error message
+                    type: string
+                    required: true
+        history_response:
+            type: array
+            properties:
+                history:
+                    description: Massage history
+                    type: array
+                    required: true
+
+
+paths:
+    /create_message:
+        post:
+            description: Create message from user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                messageText:
+                                    description: Input message text from user
+                                    type: string
+                                    required: true
+                                    default: empty string
+            response:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    messageID:
+                                        description: Created messages' identificator
+                                        type: string
+                                        required: true
+    /update_message:
+        post:
+            description: Update message by message id
+            parameters:
+                    name: messageId
+                    in: path
+                    description: message identificator
+                    required: true
+                    schema:
+                        type: string
+        response:
+            '200':
+                description: OK
+            '400':
+                description: Invalid path parameter
+                content:
+                    application/json:
+                            schema:
+                                $ref: "#/components/schemas/error"
+    /delete_message:
+        post:
+            description: Delete message by message id
+            parameters:
+                $ref: "#/update_message/post/parameters"
+        response:
+            '200':
+                description: OK
+            '400':
+                description: Invalid path parameter
+                content:
+                    application/json:
+                            schema:
+                                $ref: "#/components/schemas/error"
+    /history_message:
+        get:
+            description: Get one or more messages history
+            requestBody:
+                    required: false
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    messageID:
+                                        description: one or more messages ids
+                                        type: array
+                                        required: false
+            response:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/history_response"
+                '400':
+                    description: Invalid one or more message id
+                    content:
+                        application/json:
+                                schema:
+                                    $ref: "#/components/schemas/error"
