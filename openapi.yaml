@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
     title: Test Project API
-    version: 1.0
+    version: '1.0'
 servers:
   - url: http://localhost:5000/
 components:
@@ -23,6 +23,19 @@ components:
 
 
 paths:
+    /ping:
+        get:
+            description: Check that server is work
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        text/plain:
+                            schema:
+                                title: Server is working
+                                type: string
+                                example: pong
+
     /create_message:
         post:
             description: Create message from user
@@ -38,7 +51,7 @@ paths:
                                     type: string
                                     required: true
                                     default: empty string
-            response:
+            responses:
                 '200':
                     description: OK
                     content:
@@ -54,35 +67,40 @@ paths:
         post:
             description: Update message by message id
             parameters:
-                    name: messageId
-                    in: path
-                    description: message identificator
-                    required: true
-                    schema:
-                        type: string
-        response:
-            '200':
-                description: OK
-            '400':
-                description: Invalid path parameter
-                content:
-                    application/json:
-                            schema:
-                                $ref: "#/components/schemas/error"
+            - name: messageId
+              in: path
+              description: message identificator
+              required: true
+              schema:
+                type: string
+            responses:
+                '200':
+                    description: OK
+                '400':
+                    description: Invalid path parameter
+                    content:
+                        application/json:
+                                schema:
+                                    $ref: "#/components/schemas/error"
     /delete_message:
         post:
             description: Delete message by message id
             parameters:
-                $ref: "#/update_message/post/parameters"
-        response:
-            '200':
-                description: OK
-            '400':
-                description: Invalid path parameter
-                content:
-                    application/json:
-                            schema:
-                                $ref: "#/components/schemas/error"
+                - name: messageId
+                  in: path
+                  description: message identificator
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: OK
+                '400':
+                    description: Invalid path parameter
+                    content:
+                        application/json:
+                                schema:
+                                    $ref: "#/components/schemas/error"
     /history_message:
         get:
             description: Get one or more messages history
@@ -97,7 +115,7 @@ paths:
                                         description: one or more messages ids
                                         type: array
                                         required: false
-            response:
+            responses:
                 '200':
                     description: OK
                     content:
