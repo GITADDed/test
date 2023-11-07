@@ -13,15 +13,29 @@ components:
                     description: error message
                     type: string
                     required: true
-        history_response:
-            type: array
+                    example: Invalid input
+        history:
+            type: object
             properties:
-                history:
-                    description: Massage history
-                    type: array
+                author:
+                    description: Username, who make last action with message
+                    type: string
                     required: true
-
-
+                    example: Guts
+                messageId:
+                    description: message identificator
+                    type: string
+                    required: true
+                    example: 506355c0-5535-4cc2-9700-d67df26da7d9
+                action:
+                    description: Last action with message
+                    type: string
+                    required: true
+                    enum:
+                        - UPDATE
+                        - CREATE
+                        - DELETE
+                    example: CREATE
 paths:
     /ping:
         get:
@@ -50,7 +64,8 @@ paths:
                                     description: Input message text from user
                                     type: string
                                     required: true
-                                    default: empty string
+                                    default:
+                        example: {messageText: "This Sword Is The Proof That I Have Lived."}
             responses:
                 '200':
                     description: OK
@@ -60,19 +75,21 @@ paths:
                                 type: object
                                 properties:
                                     messageID:
-                                        description: Created messages' identificator
+                                        description: Created message id
                                         type: string
                                         required: true
-    /update/message:
+                            example: {messageID: "550e8400-e29b-41d4-a716-446655440000"}
+    /update/message/{messageID}:
         post:
-            description: Update message by message id
+            description: Update message by message id and save it in history
             parameters:
-            - name: messageId
+            - name: messageID
               in: path
               description: message identificator
               required: true
               schema:
                 type: string
+              example: /update/message/550e8400-e29b-41d4-a716-446655440000
             responses:
                 '200':
                     description: OK
@@ -82,9 +99,10 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-    /delete/message:
+                                example: {error: "Invalid path parameter"}
+    /delete/message/{messageId}:
         post:
-            description: Delete message by message id
+            description: Delete message by message id and save it in history, after deleting message cant be modify
             parameters:
                 - name: messageId
                   in: path
@@ -92,6 +110,7 @@ paths:
                   required: true
                   schema:
                       type: string
+                  example: /delete/message/550e8400-e29b-41d4-a716-446655440000
             responses:
                 '200':
                     description: OK
@@ -109,19 +128,23 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: object
+                                type: array
                                 properties:
                                     messageID:
-                                        description: one or more messages ids
-                                        type: array
-                                        required: false
+                                        description: Message id for history
+                                        type: string
+                                        required: true
+                            example: [{messageID: 550e8400-e29b-41d4-a716-446655440000}]
             responses:
                 '200':
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/history_response"
+                                title: History
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/history"
                 '400':
                     description: Invalid one or more message id
                     content:
