@@ -37,7 +37,7 @@ components:
                         - DELETE
                     example: CREATE
 paths:
-    /ping:
+    /ping/:
         get:
             description: Check that server is work
             responses:
@@ -50,7 +50,7 @@ paths:
                                 type: string
                                 example: pong
 
-    /create/message:
+    /message/create:
         post:
             description: Create message from user
             requestBody:
@@ -79,7 +79,7 @@ paths:
                                         type: string
                                         required: true
                             example: {messageID: "550e8400-e29b-41d4-a716-446655440000"}
-    /update/message/{messageID}:
+    /message/update/{messageID}:
         post:
             description: Update message by message id and save it in history
             parameters:
@@ -100,7 +100,7 @@ paths:
                                 schema:
                                     $ref: "#/components/schemas/error"
                                 example: {error: "Invalid path parameter"}
-    /delete/message/{messageId}:
+    /message/delete/{messageId}:
         post:
             description: Delete message by message id and save it in history, after deleting message cant be modify
             parameters:
@@ -120,7 +120,7 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-    /history/message:
+    /message/history:
         get:
             description: Get one or more messages history
             requestBody:
