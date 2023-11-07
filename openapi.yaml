@@ -36,7 +36,7 @@ paths:
                                 type: string
                                 example: pong
 
-    /create_message:
+    /create/message:
         post:
             description: Create message from user
             requestBody:
@@ -63,7 +63,7 @@ paths:
                                         description: Created messages' identificator
                                         type: string
                                         required: true
-    /update_message:
+    /update/message:
         post:
             description: Update message by message id
             parameters:
@@ -82,7 +82,7 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-    /delete_message:
+    /delete/message:
         post:
             description: Delete message by message id
             parameters:
@@ -101,7 +101,7 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-    /history_message:
+    /history/message:
         get:
             description: Get one or more messages history
             requestBody:
