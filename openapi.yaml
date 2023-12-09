@@ -2,31 +2,47 @@ openapi: "3.0.2"
 info:
     title: Test Project API
     version: '1.0'
-servers:
-  - url: http://localhost:5000/
 components:
     schemas:
         error:
             type: object
             properties:
-                error:
-                    description: error message
+                code:
+                    description: code error
                     type: string
                     required: true
-                    example: Invalid input
+                    example: '404'
+        message:
+            type: object
+            properties:
+                message_id:
+                    description: Identificator message
+                    type: integer
+                    required: true
+                    example: 1
+                text:
+                    description: message text
+                    type: string
+                    required: true
+                    example: I'll be back!!
         history:
             type: object
             properties:
-                author:
-                    description: Username, who make last action with message
+                user_login:
+                    description: User login, who make last action with message
                     type: string
                     required: true
-                    example: Guts
-                messageId:
-                    description: message identificator
+                    example: 1
+                message_id:
+                    description: Message id
                     type: string
                     required: true
-                    example: 506355c0-5535-4cc2-9700-d67df26da7d9
+                    example: 1
+                text:
+                    description: message text
+                    type: string
+                    required: true
+                    example: To be or not to be
                 action:
                     description: Last action with message
                     type: string
@@ -37,7 +53,7 @@ components:
                         - DELETE
                     example: CREATE
 paths:
-    /ping/:
+    /ping:
         get:
             description: Check that server is work
             responses:
@@ -56,7 +72,7 @@ paths:
             requestBody:
                 required: true
                 content:
-                    application/json:
+                    application/x-www-form-urlencoded:
                         schema:
                             type: object
                             properties:
@@ -89,17 +105,17 @@ paths:
               required: true
               schema:
                 type: string
-              example: /update/message/550e8400-e29b-41d4-a716-446655440000
+              example: /message/update/4
             responses:
                 '200':
                     description: OK
-                '400':
-                    description: Invalid path parameter
+                '404':
+                    description: Not found id
                     content:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-                                example: {error: "Invalid path parameter"}
+                                example: {code: 404, message: "Not found id"}
     /message/delete/{messageId}:
         post:
             description: Delete message by message id and save it in history, after deleting message cant be modify
@@ -110,7 +126,7 @@ paths:
                   required: true
                   schema:
                       type: string
-                  example: /delete/message/550e8400-e29b-41d4-a716-446655440000
+                  example: /delete/message/5
             responses:
                 '200':
                     description: OK
@@ -128,13 +144,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                type: array
+                                type: object
                                 properties:
-                                    messageID:
-                                        description: Message id for history
+                                    message_id_from:
+                                        description: Message id for history, which begin
                                         type: string
                                         required: true
-                            example: [{messageID: 550e8400-e29b-41d4-a716-446655440000}]
+                                    message_id_to:
+                                        description: Message id for history, which end, if not exist use one message from message_id_from
+                                        type: string
+                                        required: false
+                            example: {message_id_from: 1, message_id_to: 5}
             responses:
                 '200':
                     description: OK
@@ -145,9 +165,54 @@ paths:
                                 type: array
                                 items:
                                     $ref: "#/components/schemas/history"
-                '400':
-                    description: Invalid one or more message id
+    /message/show/all:
+        get:
+            description: Get all messages with last updates
+            responses:
+                '200':
+                    description: OK
                     content:
                         application/json:
-                                schema:
-                                    $ref: "#/components/schemas/error"
+                            schema:
+                                title: messages
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/message"
+
+    /message/show/deleted:
+        get:
+            description: Get all deleted messages
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                title: messages
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/message"
+
+    /message/show/{message_id}:
+        get:
+            description: Get message by id
+            parameters:
+                - in: path
+                  description: message identificator
+                  name: message_id
+                  schema:
+                      type: integer
+                      example: 1
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/message"
+                '404':
+                    description: Not found message
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/error"

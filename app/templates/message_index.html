@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Message input</h1>
+<form action="/message/create" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.message_text.label }}<br>
+        {{ form.message_text(size=512) }}<br>
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+
+    {% with message = get_flashed_messages() %}
+        {% if message %}
+            <p>Your message id: {{ message }}</p>
+        {% endif %}
+    {% endwith %}
+
+{% endblock %}
