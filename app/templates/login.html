@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>Sign In</h1>
-    <p>New User? <a href="{{ url_for('main.register') }}">Click to Register!</a></p>
+    <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
     {% with message = get_flashed_messages() %}
         {% if message %}
             <p>{{ message }}</p>

@@ -1,7 +1,7 @@
 import unittest
 from app import create_app
 from app.message.func import *
-from tests.config.test_config import TestConfig
+from tests.config.test_config import TestMessageConfig
 from tests.utils.message import *
 
 test_user_login = 'test_user'
@@ -14,7 +14,7 @@ number_messages = 30
 class TestMessageCase(unittest.TestCase):
 
     def setUp(self):
-        self.app = create_app(TestConfig)
+        self.app = create_app(TestMessageConfig)
         self.app_context = self.app.app_context()
         self.app_context.push()
 
@@ -28,7 +28,7 @@ class TestMessageCase(unittest.TestCase):
         u.set_password(test_user_passwd)
         db.session.add(u)
         db.session.commit()
-        self.user = db.session.query(User).filter_by(login=test_user_login).first()
+        self.user = u
 
     def tearDown(self):
         db.session.remove()

@@ -5,13 +5,13 @@
 <body>
 <div>
     Menu:
-    <a href="{{ url_for('main.index') }}">Home</a>
+    <a href="{{ url_for('auth.index') }}">Home</a>
     <a href="{{ url_for('message.index') }}">Message input</a>
     <a href="{{ url_for('message.show_all_messages') }}">All messages</a>
     {% if current_user.is_anonymous %}
-    <a href="{{ url_for('main.login') }}">Login</a>
+    <a href="{{ url_for('auth.login') }}">Login</a>
     {% else %}
-    <a href="{{ url_for('main.logout') }}">Logout</a>
+    <a href="{{ url_for('auth.logout') }}">Logout</a>
     {% endif %}
 </div>
 <hr>

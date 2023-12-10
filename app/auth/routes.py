@@ -16,7 +16,7 @@ def login():
     return main_login(current_user, request)
 
 
-@bp.route('/logout')
+@bp.route('/logout', methods=['GET', 'POST'])
 def logout():
     logout_user()
     return redirect(url_for('auth.index'))

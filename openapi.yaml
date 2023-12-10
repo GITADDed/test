@@ -81,7 +81,7 @@ paths:
                                     type: string
                                     required: true
                                     default:
-                        example: {messageText: "This Sword Is The Proof That I Have Lived."}
+                        example: {message_text: "This Sword Is The Proof That I Have Lived."}
             responses:
                 '200':
                     description: OK
@@ -90,16 +90,16 @@ paths:
                             schema:
                                 type: object
                                 properties:
-                                    messageID:
+                                    message_id:
                                         description: Created message id
-                                        type: string
+                                        type: integer
                                         required: true
-                            example: {messageID: "550e8400-e29b-41d4-a716-446655440000"}
-    /message/update/{messageID}:
+                            example: {message_id: 1}
+    /message/update/{message_id}:
         post:
             description: Update message by message id and save it in history
             parameters:
-            - name: messageID
+            - name: message_id
               in: path
               description: message identificator
               required: true
@@ -115,18 +115,18 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
-                                example: {code: 404, message: "Not found id"}
-    /message/delete/{messageId}:
+                                example: {code: 404}
+    /message/delete/{message_id}:
         post:
             description: Delete message by message id and save it in history, after deleting message cant be modify
             parameters:
-                - name: messageId
+                - name: message_id
                   in: path
                   description: message identificator
                   required: true
                   schema:
                       type: string
-                  example: /delete/message/5
+                  example: 5
             responses:
                 '200':
                     description: OK
@@ -136,6 +136,14 @@ paths:
                         application/json:
                                 schema:
                                     $ref: "#/components/schemas/error"
+                                example: {code: 400}
+                '404':
+                    description: Not found message for delete
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/error"
+                            example: {code: 404}
     /message/history:
         get:
             description: Get one or more messages history

@@ -36,7 +36,8 @@ def create_message(text, user_login):
 
     message_id = message.id
 
-    # Сохранение id предка сообщения. Для того, чтобы потом получить историю сообщения.
+    # Сохранение id предка сообщения(для новых сообщений предком является оно само). Для того чтобы потом получить
+    # историю сообщения.
     message.message_ancestor_id = message_id
     db.session.commit()
 

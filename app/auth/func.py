@@ -21,7 +21,6 @@ def valid_user_and_sign_in(form):
     logger.info(f'Search user {form.login.data}')
 
     if user is None or not user.check_password(form.password.data):
-        flash('Invalid login or password')
         logger.info('Invalid login or password')
         return False
 
@@ -40,6 +39,7 @@ def main_login(current_user, request):
         if valid_user_and_sign_in(form):
             return redirect_next_page(request.args.get('next'))
         else:
+            flash('Invalid login or password')
             return redirect(url_for('auth.login'))
 
     return render_template('login.html', title='Sign In', form=form)
