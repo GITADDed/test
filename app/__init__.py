@@ -48,25 +48,25 @@ def create_app(config_class=Config):
     main_logger = logging.getLogger('main_logger')
 
     db.init_app(app)
-    main_logger.info('Data base init in app')
     migrate.init_app(app, db)
-    main_logger.info('Migration is on')
-    login.init_app(app)
 
     if not app.debug and not app.testing:
         if not os.path.exists('logs'):
             os.mkdir('logs')
 
         formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
-        file_handler_main = RotatingFileHandler('logs/auth.log', maxBytes=10240, backupCount=10)
+        file_handler_main = RotatingFileHandler('logs/app.log', maxBytes=10240, encoding='utf-8')
         file_handler_main.setFormatter(formatter)
         file_handler_main.setLevel(logging.INFO)
         main_logger.addHandler(file_handler_main)
         main_logger.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler_main)
+        app.logger.setLevel(logging.WARNING)
 
         with app.app_context():
-            flask_migrate.upgrade()
+            db.create_all()
 
+    login.init_app(app)
     login.login_view = 'auth.login'
 
     from app.auth import bp as main_blueprint
